@@ -1,0 +1,9 @@
+{
+	refId: "9bdc9a4c-a1fe-4824-9f01-4a3c39410c28",
+	name: "Update to database schema v5",
+	description: "This update changes the database structure to fit the openLCA 1.5.0 schema",
+	dbVersion: 4,
+	releaseDate: "2016-12-01",
+	dependencies: [],
+	required: true
+}
