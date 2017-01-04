@@ -39,7 +39,7 @@ public class UpdateHelper {
 		for (String refId : getUpdateIds()) {
 			Update update = getForRefId(refId);
 			UpdateManifest fromDb = store.getForRefId(update.manifest.refId);
-			if (fromDb != null && !update.manifest.required)
+			if (fromDb != null && (!update.manifest.required || update.manifest.executed))
 				continue;
 			updates.add(update.manifest);
 		}
