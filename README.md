@@ -9,7 +9,7 @@ Updates themselves are written in python and define their meta data in a manifes
 Installation
 ------------
 In order to install the update module, you need to have a [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
-and [Maven 3](https://maven.apache.org/install.html) installed. [Download](https://github.com/GreenDelta/olca-modules/archive/master.zip) 
+and [Maven 3](https://maven.apache.org/install.html) installed. [Download](https://github.com/GreenDelta/olca-updates/archive/master.zip) 
 the repository (or get it via git), navigate to the root folder and type the 
 following command in your console:
 
