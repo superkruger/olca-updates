@@ -17,27 +17,32 @@ def callback(rs):
 	idx.put(LongPair.of(processId, flowId), exchangeId);
 	return;
 
-idx = TObjectLongHashMap(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1);
-flowTypes = FlowTypeTable.create(db);
-sql = "SELECT id, f_owner, f_flow, is_input from tbl_exchanges";
-olca.querySql(sql, callback);
-con = db.createConnection();
-con.setAutoCommit(False);
-query = con.createStatement();
-query.setCursorName("UPDATE_LINKS");
-cursor = query.executeQuery("SELECT f_process, f_flow FROM tbl_process_links FOR UPDATE of f_exchange");
-update = con.prepareStatement("UPDATE tbl_process_links SET f_exchange = ? WHERE CURRENT OF UPDATE_LINKS");
-while cursor.next():
-	processId = cursor.getLong(1);
-	flowId = cursor.getLong(2);
-	exchangeId = idx.get(LongPair.of(processId, flowId));
-	if exchangeId > 0:
-		update.setLong(1, exchangeId);
-		update.executeUpdate();
-cursor.close();
-query.close();
-update.close();
-con.commit();
-con.close();
+def updateLinks(rs):
+	if rs.getInt("noOfLinks") < 1:
+		return
+	idx = TObjectLongHashMap(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1);
+	flowTypes = FlowTypeTable.create(db);
+	sql = "SELECT id, f_owner, f_flow, is_input from tbl_exchanges";
+	olca.querySql(sql, callback);
+	con = db.createConnection();
+	con.setAutoCommit(False);
+	query = con.createStatement();
+	query.setCursorName("UPDATE_LINKS");
+	cursor = query.executeQuery("SELECT f_process, f_flow FROM tbl_process_links FOR UPDATE of f_exchange");
+	update = con.prepareStatement("UPDATE tbl_process_links SET f_exchange = ? WHERE CURRENT OF UPDATE_LINKS");
+	while cursor.next():
+		processId = cursor.getLong(1);
+		flowId = cursor.getLong(2);
+		exchangeId = idx.get(LongPair.of(processId, flowId));
+		if exchangeId > 0:
+			update.setLong(1, exchangeId);
+			update.executeUpdate();
+	cursor.close();
+	query.close();
+	update.close();
+	con.commit();
+	con.close();
+
+olca.querySql("SELECT count(f_product_system) AS noOfLinks FROM tbl_process_links", updateLinks)
 
 dbUtil.setVersion(5);
