@@ -7,6 +7,9 @@ dbUtil.renameColumn("tbl_sources", "doi", "url", "VARCHAR(255)");
 dbUtil.renameColumn("tbl_process_links", "f_recipient", "f_process", "BIGINT");
 dbUtil.createColumn("tbl_process_links", "f_exchange", "f_exchange BIGINT");
 
+flowTypes = None
+idx = None
+
 def callback(rs):
 	exchangeId = rs.getLong(1);
 	processId = rs.getLong(2);
@@ -20,7 +23,9 @@ def callback(rs):
 def updateLinks(rs):
 	if rs.getInt("noOfLinks") < 1:
 		return
+	global idx
 	idx = TObjectLongHashMap(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1);
+	global flowTypes
 	flowTypes = FlowTypeTable.create(db);
 	sql = "SELECT id, f_owner, f_flow, is_input from tbl_exchanges";
 	olca.querySql(sql, callback);
