@@ -15,7 +15,7 @@ import com.google.gson.stream.JsonReader;
 
 public class Update {
 
-	public final UpdateManifest manifest;
+	public final UpdateMetaInfo metaInfo;
 	public final String script;
 	public final byte[] attachment;
 	public final List<ScriptFile> files;
@@ -23,14 +23,14 @@ public class Update {
 	public static Update open(InputStream updateData) throws IOException {
 		ZipInputStream stream = new ZipInputStream(updateData);
 		ZipEntry entry = null;
-		UpdateManifest manifest = null;
+		UpdateMetaInfo metaInfo = null;
 		String script = null;
 		byte[] attachment = null;
 		List<ScriptFile> files = new ArrayList<>();
 		while ((entry = stream.getNextEntry()) != null) {
 			switch (entry.getName()) {
-			case "MANIFEST.MF":
-				manifest = readManifest(stream);
+			case "meta-info.json":
+				metaInfo = readMetaInfo(stream);
 				break;
 			case "script.py":
 				script = readScript(stream);
@@ -45,33 +45,33 @@ public class Update {
 			stream.closeEntry();
 		}
 		stream.close();
-		return new Update(manifest, script, files, attachment);
+		return new Update(metaInfo, script, files, attachment);
 	}
 	
-	public static Update wrap(UpdateManifest manifest) {
-		return new Update(manifest);
+	public static Update wrap(UpdateMetaInfo metaInfo) {
+		return new Update(metaInfo);
 	}
 
-	private Update(UpdateManifest manifest) {
-		this.manifest = manifest;
+	private Update(UpdateMetaInfo metaInfo) {
+		this.metaInfo = metaInfo;
 		this.script = null;
 		this.files = new ArrayList<>();
 		this.attachment = null;
 	}
 
-	private Update(UpdateManifest manifest, String script, List<ScriptFile> files, byte[] attachment) {
-		this.manifest = manifest;
+	private Update(UpdateMetaInfo metaInfo, String script, List<ScriptFile> files, byte[] attachment) {
+		this.metaInfo = metaInfo;
 		this.script = script;
 		this.files = files;
 		this.attachment = attachment;
 	}
 
-	public static UpdateManifest readManifest(InputStream stream) throws IOException {
+	public static UpdateMetaInfo readMetaInfo(InputStream stream) throws IOException {
 		byte[] data = readEntry(stream);
 		String json = new String(data, Charset.forName("utf-8"));
 		JsonReader reader = new JsonReader(new StringReader(json));
 		reader.setLenient(true);
-		return new GsonBuilder().setDateFormat("yyyy-MM-dd").create().fromJson(reader, UpdateManifest.class);
+		return new GsonBuilder().setDateFormat("yyyy-MM-dd").create().fromJson(reader, UpdateMetaInfo.class);
 	}
 
 	private static String readScript(ZipInputStream stream) throws IOException {
@@ -96,12 +96,12 @@ public class Update {
 		if (!(obj instanceof Update))
 			return false;
 		Update update = (Update) obj;
-		return update.manifest.equals(manifest);
+		return update.metaInfo.equals(metaInfo);
 	}
 	
 	@Override
 	public int hashCode() {
-		return manifest.hashCode();
+		return metaInfo.hashCode();
 	}
 
 	public static class ScriptFile {

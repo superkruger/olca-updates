@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class UpdateManifest {
+public class UpdateMetaInfo {
 
 	public String refId;
 	public String name;
@@ -19,10 +19,10 @@ public class UpdateManifest {
 	public boolean equals(Object obj) {
 		if (obj == this)
 			return true;
-		if (!(obj instanceof UpdateManifest))
+		if (!(obj instanceof UpdateMetaInfo))
 			return false;
-		UpdateManifest manifest = (UpdateManifest) obj;
-		return manifest.refId.equals(refId);
+		UpdateMetaInfo meta = (UpdateMetaInfo) obj;
+		return meta.refId.equals(refId);
 	}
 
 	@Override

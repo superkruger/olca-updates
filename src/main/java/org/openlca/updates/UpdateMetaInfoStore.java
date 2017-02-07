@@ -15,57 +15,57 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-public class UpdateManifestStore {
+public class UpdateMetaInfoStore {
 
-	private final static Logger log = LoggerFactory.getLogger(UpdateManifestStore.class);
+	private final static Logger log = LoggerFactory.getLogger(UpdateMetaInfoStore.class);
 	private final File store;
 
-	public UpdateManifestStore(IDatabase database) {
+	public UpdateMetaInfoStore(IDatabase database) {
 		store = new File(database.getFileStorageLocation(), "updates");
 		if (store.exists())
 			return;
 		store.mkdirs();
 	}
 
-	public UpdateManifest getForRefId(String refId) {
+	public UpdateMetaInfo getForRefId(String refId) {
 		File file = new File(store, refId + ".MF");
 		if (!file.exists())
 			return null;
 		try (InputStream stream = new FileInputStream(file)) {
-			return Update.readManifest(stream);
+			return Update.readMetaInfo(stream);
 		} catch (IOException e) {
-			log.error("Error loading manifest " + refId, e);
+			log.error("Error loading meta info " + refId, e);
 			return null;
 		}
 	}
 
-	public Set<UpdateManifest> getAll() {
+	public Set<UpdateMetaInfo> getAll() {
 		File[] files = store.listFiles();
 		if (files == null)
 			return new HashSet<>();
-		Set<UpdateManifest> all = new HashSet<>();
+		Set<UpdateMetaInfo> all = new HashSet<>();
 		for (File file : files) {
 			try (InputStream stream = new FileInputStream(file)) {
-				all.add(Update.readManifest(stream));
+				all.add(Update.readMetaInfo(stream));
 			} catch (IOException e) {
-				log.error("Error loading manifests", e);
+				log.error("Error loading meta infos", e);
 			}
 		}
 		return all;
 	}
 
-	public UpdateManifest save(UpdateManifest manifest) {
-		UpdateManifest fromDb = getForRefId(manifest.refId);
+	public UpdateMetaInfo save(UpdateMetaInfo metaInfo) {
+		UpdateMetaInfo fromDb = getForRefId(metaInfo.refId);
 		if (fromDb != null && fromDb.executed)
 			return fromDb;
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-		File file = new File(store, manifest.refId + ".MF");
+		File file = new File(store, metaInfo.refId + ".MF");
 		try (FileWriter writer = new FileWriter(file)) {
-			gson.toJson(manifest, writer);
+			gson.toJson(metaInfo, writer);
 		} catch (IOException e) {
-			log.error("Error saving manifest " + manifest.refId, e);
+			log.error("Error saving meta info " + metaInfo.refId, e);
 		}
-		return manifest;
+		return metaInfo;
 	}
 
 }

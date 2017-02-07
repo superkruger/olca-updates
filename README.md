@@ -3,7 +3,7 @@ olca-updates
 This project provides the update functionality for [openLCA](http://openlca.org). 
 Since version version 1.6 the [openLCA application](https://github.com/GreenDelta/olca-app) 
 is using this component to update existing databases. 
-Updates themselves are written in python and define their meta data in a manifest file. 
+Updates themselves are written in python and define their meta data in a json file. 
 
 
 Installation

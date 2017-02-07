@@ -25,60 +25,63 @@ public class UpdateHelper {
 
 	private static final Logger log = LoggerFactory.getLogger(UpdateHelper.class);
 	private final IDatabase database;
-	private final UpdateManifestStore store;
+	private final UpdateMetaInfoStore store;
 	private final Python python;
 
 	public UpdateHelper(IDatabase database, CalculationContext context, File pythonDir) {
 		this.python = new Python(database, context, pythonDir);
 		this.database = database;
-		this.store = new UpdateManifestStore(database);
+		this.store = new UpdateMetaInfoStore(database);
 	}
 
-	public Set<UpdateManifest> getNewAndRequired() {
-		Set<UpdateManifest> updates = new HashSet<>();
+	public Set<UpdateMetaInfo> getNewAndRequired() {
+		Set<UpdateMetaInfo> updates = new HashSet<>();
 		for (String refId : getUpdateIds()) {
 			Update update = getForRefId(refId);
-			UpdateManifest fromDb = store.getForRefId(update.manifest.refId);
-			if (fromDb != null && (!update.manifest.required || update.manifest.executed))
+			UpdateMetaInfo fromDb = store.getForRefId(update.metaInfo.refId);
+			if (fromDb != null && (!update.metaInfo.required || update.metaInfo.executed))
 				continue;
-			updates.add(update.manifest);
+			updates.add(update.metaInfo);
 		}
 		return updates;
 	}
 
-	public Set<UpdateManifest> getAllUpdates() {
-		Set<UpdateManifest> updates = new HashSet<>();
+	public Set<UpdateMetaInfo> getAllUpdates() {
+		Set<UpdateMetaInfo> updates = new HashSet<>();
 		for (String refId : getUpdateIds()) {
 			Update update = getForRefId(refId);
-			updates.add(update.manifest);
+			updates.add(update.metaInfo);
 		}
-		for (UpdateManifest manifest : store.getAll()) {
-			if (updates.contains(manifest))
+		for (UpdateMetaInfo metaInfo : store.getAll()) {
+			if (updates.contains(metaInfo))
 				continue;
-			updates.add(manifest);
+			updates.add(metaInfo);
 		}
 		return updates;
 	}
 
-	public Set<UpdateManifest> getExecuted() {
-		Set<UpdateManifest> updates = new HashSet<>();
-		for (UpdateManifest manifest : store.getAll()) {
-			if (!manifest.executed)
+	public Set<UpdateMetaInfo> getExecuted() {
+		Set<UpdateMetaInfo> updates = new HashSet<>();
+		for (UpdateMetaInfo metaInfo : store.getAll()) {
+			if (!metaInfo.executed)
 				continue;
-			if (updates.contains(manifest))
+			if (updates.contains(metaInfo))
 				continue;
-			updates.add(manifest);
+			updates.add(metaInfo);
 		}
 		return updates;
 	}
 
 	public Update getForRefId(String refId) {
 		try {
-			Update update = Update.open(getStream(refId + ".zip"));
-			UpdateManifest fromDb = store.getForRefId(update.manifest.refId);
+			InputStream stream = getStream(refId + ".zip");
+			if (stream == null)
+				return null;
+			Update update = Update.open(stream);
+			UpdateMetaInfo fromDb = store.getForRefId(update.metaInfo.refId);
 			if (fromDb == null)
 				return update;
-			update.manifest.executed = fromDb.executed;
+			update.metaInfo.executed = fromDb.executed;
 			return update;
 		} catch (IOException e) {
 			log.error("Error loading update " + refId, e);
@@ -113,44 +116,44 @@ public class UpdateHelper {
 		Status status = checkIfApplicable(update);
 		if (status != null)
 			return status;
-		log.info("Applying update " + update.manifest.name + " (" + update.manifest.refId + ")");
+		log.info("Applying update " + update.metaInfo.name + " (" + update.metaInfo.refId + ")");
 		initData(update);
 		boolean succeeded = python.eval(update.script);
 		if (!succeeded)
 			return Status.SCRIPT_ERROR;
-		update.manifest.executed = true;
-		store.save(update.manifest);
+		update.metaInfo.executed = true;
+		store.save(update.metaInfo);
 		return Status.EXECUTED;
 	}
 
 	public void skip(Update update) {
-		update.manifest.executed = false;
-		store.save(update.manifest);
+		update.metaInfo.executed = false;
+		store.save(update.metaInfo);
 	}
 
 	private Status checkIfApplicable(Update update) {
-		UpdateManifest existing = store.getForRefId(update.manifest.refId);
+		UpdateMetaInfo existing = store.getForRefId(update.metaInfo.refId);
 		if (existing != null && existing.executed) {
-			log.info("Skipping update " + update.manifest.refId + " - was executed before");
+			log.info("Skipping update " + update.metaInfo.refId + " - was executed before");
 			return Status.EXECUTED_BEFORE;
 		}
-		int dbVersion = update.manifest.dbVersion;
+		int dbVersion = update.metaInfo.dbVersion;
 		if (dbVersion != database.getVersion()) {
 			if (dbVersion < IDatabase.CURRENT_VERSION && dbVersion >= Upgrades.FINAL_UPGRADE) {
 				// its safe to assume that this update was executed before
-				update.manifest.executed = true;
-				store.save(update.manifest);
-				log.info("Skipping update " + update.manifest.refId + " - was executed before");
+				update.metaInfo.executed = true;
+				store.save(update.metaInfo);
+				log.info("Skipping update " + update.metaInfo.refId + " - was executed before");
 				return Status.EXECUTED_BEFORE;
 			}
-			log.info("Skipping update " + update.manifest.refId + " - db version mismatch");
+			log.info("Skipping update " + update.metaInfo.refId + " - db version mismatch");
 			return Status.DB_MISMATCH;
 		}
-		for (String depRefId : update.manifest.dependencies) {
+		for (String depRefId : update.metaInfo.dependencies) {
 			existing = store.getForRefId(depRefId);
 			if (existing != null && existing.executed)
 				continue;
-			log.info("Skipping update " + update.manifest.refId + " - missing dependency " + depRefId);
+			log.info("Skipping update " + update.metaInfo.refId + " - missing dependency " + depRefId);
 			return Status.MISSING_DEPENDENCY;
 		}
 		return null;
