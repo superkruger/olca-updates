@@ -29,8 +29,9 @@ public class UpdateHelper {
 	private final Python python;
 
 	public UpdateHelper(IDatabase database, CalculationContext context, File pythonDir) {
-		this.python = new Python(context, pythonDir);
+		this.python = new Python(pythonDir);
 		this.python.setDatabase(database);
+		this.python.setContext(context);
 		this.database = database;
 		this.store = new UpdateMetaInfoStore(database);
 	}

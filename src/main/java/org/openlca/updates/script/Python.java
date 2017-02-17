@@ -16,20 +16,23 @@ import org.slf4j.LoggerFactory;
 public class Python {
 
 	private final static Logger log = LoggerFactory.getLogger(Python.class);
-	private final CalculationContext context;
 	private final File pythonDir;
 	private final Map<String, Object> properties = new HashMap<>();
 	private IDatabase database;
+	private CalculationContext context;
 
-	public Python(CalculationContext context, File pythonDir) {
-		this.context = context;
+	public Python(File pythonDir) {
 		this.pythonDir = pythonDir;
 	}
 
 	public void setDatabase(IDatabase database) {
 		this.database = database;
 	}
-	
+
+	public void setContext(CalculationContext context) {
+		this.context = context;
+	}
+
 	public void setDataDir(File dataDir) {
 		properties.put("__datadir__", dataDir.getAbsolutePath());
 	}
