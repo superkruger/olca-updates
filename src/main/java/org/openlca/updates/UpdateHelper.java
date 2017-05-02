@@ -12,7 +12,6 @@ import java.util.Set;
 
 import org.openlca.core.database.IDatabase;
 import org.openlca.updates.Update.ScriptFile;
-import org.openlca.updates.legacy.Upgrades;
 import org.openlca.updates.script.CalculationContext;
 import org.openlca.updates.script.Python;
 import org.python.jline.internal.InputStreamReader;
@@ -141,7 +140,7 @@ public class UpdateHelper {
 		}
 		int dbVersion = update.metaInfo.dbVersion;
 		if (dbVersion != database.getVersion()) {
-			if (dbVersion < IDatabase.CURRENT_VERSION && dbVersion >= Upgrades.FINAL_UPGRADE) {
+			if (database.getVersion() > dbVersion) {
 				// its safe to assume that this update was executed before
 				update.metaInfo.executed = true;
 				store.save(update.metaInfo);
