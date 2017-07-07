@@ -1,8 +1,8 @@
 package org.openlca.updates.script;
 
 import org.openlca.core.database.EntityCache;
-import org.openlca.core.math.IMatrixSolver;
 import org.openlca.core.matrix.cache.MatrixCache;
+import org.openlca.core.matrix.solvers.IMatrixSolver;
 
 public class CalculationContext {
 
