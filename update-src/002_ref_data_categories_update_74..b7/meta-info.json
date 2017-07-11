@@ -1,0 +1,10 @@
+{
+	"refId": "7442f8b0-b719-11e6-80f5-76304dec7eb7",
+	"name": "Update of categories in reference data",
+	"description": "This update changes the names of the elementary flows compartments 'air', 'water, 'soil', 'resource' to 'Emission to air', 'Emission to water', 'Emission to soil' and 'Resource', respectively",
+	"dbVersion": 6,
+	"releaseDate": "2016-12-01",
+	"dependencies": [
+		"f0c50fd6-b90d-4b47-8fde-ccf9309100b7"
+	]
+}

@@ -1,15 +1,22 @@
 package org.openlca.updates;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zeroturnaround.zip.ZipUtil;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 /**
  * This class builds the update zip files from the script sources
@@ -40,12 +47,26 @@ public class Main {
 	}
 
 	private static String pack(File dir) {
-		String uuid = dir.getName();
+		String uuid = uuid(dir);
 		if (!TARGET.exists()) {
 			TARGET.mkdirs();
 		}
 		ZipUtil.pack(dir, new File(TARGET, uuid + ".zip"));
 		return uuid;
+	}
+
+	private static String uuid(File dir) {
+		File f = new File(dir, "meta-info.json");
+		Gson gson = new Gson();
+		try (
+				FileInputStream fis = new FileInputStream(f);
+				Reader reader = new InputStreamReader(fis, "utf-8");
+				BufferedReader buffer = new BufferedReader(reader)) {
+			JsonObject json = gson.fromJson(buffer, JsonObject.class);
+			return json.get("refId").getAsString();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static void writeSummary(Set<String> uuids) {

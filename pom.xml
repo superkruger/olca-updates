@@ -11,13 +11,6 @@
 	<version>1.7.0</version>
 	<packaging>jar</packaging>
 
-	<repositories>
-		<repository>
-			<id>EclipseLink</id>
-			<url>http://download.eclipse.org/rt/eclipselink/maven.repo</url>
-		</repository>
-	</repositories>
-
 	<dependencies>
 
 		<dependency>
