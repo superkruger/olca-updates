@@ -1,6 +1,7 @@
 def main():
     olca.eachCategory(update_category_name)
 
+
 def update_category_name(category):
     if category.modelType.name() == 'FLOW':
         categoryPath = get_category_path(category)
@@ -13,6 +14,7 @@ def update_category_name(category):
             category.name = new_name
             olca.updateCategory(category)
 
+
 def get_category_path(cat):
     path = "%s\\" % (cat.name)
     while cat.category is not None:
@@ -22,5 +24,3 @@ def get_category_path(cat):
 
 if __name__ == '__main__':
     main()
-
-

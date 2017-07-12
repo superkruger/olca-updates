@@ -1,0 +1,11 @@
+{
+	"refId": "61294145-05db-45e4-9cb8-84bfb76baf2f",
+	"name": "Update to database schema v7",
+	"description": "This update changes the database structure to fit the openLCA 1.7.0 schema",
+	"dbVersion": 6,
+	"releaseDate": "2017-12-07",
+	"dependencies": [
+		"f0c50fd6-b90d-4b47-8fde-ccf9309100b7"
+	],
+	"required": true
+}
