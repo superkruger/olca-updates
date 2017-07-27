@@ -1,7 +1,4 @@
-def setInternalIds(process):
-    for exchange in process.getExchanges():
-        exchange.internalId = process.drawNextInternalId()  
-    olca.updateProcess(process)
+import java.sql.ResultSet as ResultSet
 
 def main():
     global dbUtil
@@ -23,7 +20,35 @@ def main():
         'internal_id',
         'internal_id INTEGER')
 
-    olca.eachProcess(setInternalIds)
+    con = db.createConnection()
+    stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)
+    rs = stmt.executeQuery('SELECT * FROM tbl_exchanges')
+    counter = {}
+    while (rs.next()):
+        p_id = str(rs.getLong('f_owner'))
+        last = counter.get(p_id)
+        if not last:
+            last = 0
+        last = last + 1
+        counter[p_id] = last
+        rs.updateInt('internal_id', last)
+        rs.updateRow()
+    rs.close()
+    stmt.close()
+    con.commit()
+    con.close()
+    con = db.createConnection()
+    stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)
+    rs = stmt.executeQuery('SELECT * FROM tbl_processes')
+    while (rs.next()):
+        p_id = str(rs.getLong('id'))
+        last = counter.get(p_id)
+        rs.updateInt('last_internal_id', last)
+        rs.updateRow()
+    rs.close()
+    stmt.close()
+    con.commit()
+    con.close()
 
     # update database schema to version 7
     dbUtil.setVersion(7)
