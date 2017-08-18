@@ -51,6 +51,18 @@ public class UpdateHelper {
 		return updates;
 	}
 
+	public Set<UpdateMetaInfo> getUnexecuted() {
+		Set<UpdateMetaInfo> updates = new HashSet<>();
+		for (String refId : getUpdateIds()) {
+			Update update = getForRefId(refId);
+			UpdateMetaInfo fromDb = store.getForRefId(update.metaInfo.refId);
+			if (fromDb != null && update.metaInfo.executed)
+				continue;
+			updates.add(update.metaInfo);
+		}
+		return updates;
+	}
+	
 	public Set<UpdateMetaInfo> getAllUpdates() {
 		Set<UpdateMetaInfo> updates = new HashSet<>();
 		for (String refId : getUpdateIds()) {
