@@ -27,6 +27,10 @@ public class UpdateHelper {
 	private final UpdateMetaInfoStore store;
 	private final Python python;
 
+	public UpdateHelper(IDatabase database, File pythonDir) {
+		this(database, null, pythonDir);
+	}
+
 	public UpdateHelper(IDatabase database, CalculationContext context, File pythonDir) {
 		this.python = new Python(pythonDir);
 		this.python.setDatabase(database);
