@@ -43,8 +43,9 @@ def main():
     while (rs.next()):
         p_id = str(rs.getLong('id'))
         last = counter.get(p_id)
-        rs.updateInt('last_internal_id', last)
-        rs.updateRow()
+        if last:
+	        rs.updateInt('last_internal_id', last)
+    	    rs.updateRow()
     rs.close()
     stmt.close()
     con.commit()
