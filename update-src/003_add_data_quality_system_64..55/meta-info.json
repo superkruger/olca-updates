@@ -3,6 +3,7 @@
 	"name": "Creation of data quality system",
 	"description": "This update creates the ecoinvent data quality system, if ecoinvent pedigree values are set",
 	"dbVersion": 6,
+	"schemaUpdate": false,
 	"releaseDate": "2016-12-01",
 	"dependencies": [
 		"f0c50fd6-b90d-4b47-8fde-ccf9309100b7"

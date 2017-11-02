@@ -10,6 +10,7 @@ public class UpdateMetaInfo implements Comparable<UpdateMetaInfo> {
 	public String name;
 	public String description;
 	public int dbVersion;
+	public boolean schemaUpdate;
 	public boolean required;
 	public Date releaseDate;
 	public boolean executed;
@@ -29,10 +30,13 @@ public class UpdateMetaInfo implements Comparable<UpdateMetaInfo> {
 	public int hashCode() {
 		return refId.hashCode();
 	}
-	
+
 	@Override
 	public int compareTo(UpdateMetaInfo o) {
-		return Integer.compare(dbVersion, o.dbVersion);
+		int c = Integer.compare(dbVersion, o.dbVersion);
+		if (c != 0)
+			return c;
+		return Boolean.compare(schemaUpdate, o.schemaUpdate);
 	}
 
 }

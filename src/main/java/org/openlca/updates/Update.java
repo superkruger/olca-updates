@@ -13,7 +13,7 @@ import java.util.zip.ZipInputStream;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-public class Update {
+public class Update implements Comparable<Update> {
 
 	public final UpdateMetaInfo metaInfo;
 	public final String script;
@@ -104,6 +104,11 @@ public class Update {
 		return metaInfo.hashCode();
 	}
 
+	@Override
+	public int compareTo(Update o) {
+		return metaInfo.compareTo(o.metaInfo);
+	}
+	
 	public static class ScriptFile {
 
 		public final String filename;
