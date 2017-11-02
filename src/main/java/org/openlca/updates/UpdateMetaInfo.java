@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class UpdateMetaInfo {
+public class UpdateMetaInfo implements Comparable<UpdateMetaInfo> {
 
 	public String refId;
 	public String name;
@@ -28,6 +28,11 @@ public class UpdateMetaInfo {
 	@Override
 	public int hashCode() {
 		return refId.hashCode();
+	}
+	
+	@Override
+	public int compareTo(UpdateMetaInfo o) {
+		return Integer.compare(dbVersion, o.dbVersion);
 	}
 
 }
