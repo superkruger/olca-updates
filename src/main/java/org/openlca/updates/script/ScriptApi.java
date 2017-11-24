@@ -4,10 +4,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.openlca.core.database.ActorDao;
 import org.openlca.core.database.CategoryDao;
+import org.openlca.core.database.Daos;
 import org.openlca.core.database.FlowDao;
 import org.openlca.core.database.FlowPropertyDao;
 import org.openlca.core.database.IDatabase;
@@ -29,9 +31,11 @@ import org.openlca.core.model.Flow;
 import org.openlca.core.model.FlowProperty;
 import org.openlca.core.model.ImpactMethod;
 import org.openlca.core.model.Location;
+import org.openlca.core.model.ModelType;
 import org.openlca.core.model.Process;
 import org.openlca.core.model.ProductSystem;
 import org.openlca.core.model.Project;
+import org.openlca.core.model.RootEntity;
 import org.openlca.core.model.SocialIndicator;
 import org.openlca.core.model.Source;
 import org.openlca.core.model.UnitGroup;
@@ -587,6 +591,17 @@ public class ScriptApi {
 			simulator.nextRun();
 		SimulationResult result = simulator.getResult();
 		return new SimulationResultProvider<>(result, context.entityCache);
+	}
+
+	public List<? extends RootEntity> query(String jpql, ModelType type) {
+		return Daos.root(database, type).getAll(jpql, new HashMap<>());
+	}
+
+	public RootEntity queryFirst(String jpql, ModelType type) {
+		List<? extends RootEntity> elements = query(jpql, type);
+		if (elements.isEmpty())
+			return null;
+		return elements.get(0);
 	}
 
 	public void querySql(String query, Consumer<ResultSet> fn) {
