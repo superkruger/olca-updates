@@ -553,7 +553,7 @@ public class ScriptApi {
 		CalculationSetup setup = new CalculationSetup(system);
 		if (method != null)
 			setup.impactMethod = Descriptors.toDescriptor(method);
-		setup.parameterRedefs.addAll(system.getParameterRedefs());
+		setup.parameterRedefs.addAll(system.parameterRedefs);
 		SystemCalculator calculator = new SystemCalculator(context.matrixCache, context.solver);
 		SimpleResult result = calculator.calculateSimple(setup);
 		return new SimpleResultProvider<>(result, context.entityCache);
@@ -569,7 +569,7 @@ public class ScriptApi {
 		CalculationSetup setup = new CalculationSetup(system);
 		if (method != null)
 			setup.impactMethod = Descriptors.toDescriptor(method);
-		setup.parameterRedefs.addAll(system.getParameterRedefs());
+		setup.parameterRedefs.addAll(system.parameterRedefs);
 		SystemCalculator calculator = new SystemCalculator(context.matrixCache, context.solver);
 		ContributionResult result = calculator.calculateContributions(setup);
 		return new ContributionResultProvider<>(result, context.entityCache);
@@ -585,7 +585,7 @@ public class ScriptApi {
 		CalculationSetup setup = new CalculationSetup(system);
 		if (method != null)
 			setup.impactMethod = Descriptors.toDescriptor(method);
-		setup.parameterRedefs.addAll(system.getParameterRedefs());
+		setup.parameterRedefs.addAll(system.parameterRedefs);
 		Simulator simulator = new Simulator(setup, context.matrixCache, context.solver);
 		for (int i = 0; i < iterations; i++)
 			simulator.nextRun();
