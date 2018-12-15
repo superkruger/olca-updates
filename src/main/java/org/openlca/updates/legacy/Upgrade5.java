@@ -8,7 +8,7 @@ import java.sql.Statement;
 import org.openlca.core.database.IDatabase;
 import org.openlca.core.database.NativeSql;
 import org.openlca.core.matrix.LongPair;
-import org.openlca.core.matrix.cache.FlowTypeTable;
+import org.openlca.core.matrix.cache.FlowTable;
 import org.openlca.core.model.FlowType;
 import org.openlca.updates.DbUtil;
 import org.slf4j.Logger;
@@ -72,7 +72,7 @@ class Upgrade5 implements IUpgrade {
 	private TObjectLongHashMap<LongPair> inputIdx(IDatabase db) {
 		TObjectLongHashMap<LongPair> idx = new TObjectLongHashMap<>(
 				Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1);
-		FlowTypeTable flowTypes = FlowTypeTable.create(db);
+		FlowTable flowTypes = FlowTable.create(db);
 		String sql = "SELECT id, f_owner, f_flow, is_input from tbl_exchanges";
 		try {
 			NativeSql.on(db).query(sql, r -> {
@@ -80,7 +80,7 @@ class Upgrade5 implements IUpgrade {
 				long processId = r.getLong(2);
 				long flowId = r.getLong(3);
 				boolean isInput = r.getBoolean(4);
-				if (!isInput || flowTypes.get(flowId) == FlowType.ELEMENTARY_FLOW)
+				if (!isInput || flowTypes.type(flowId) == FlowType.ELEMENTARY_FLOW)
 					return true;
 				idx.put(LongPair.of(processId, flowId), exchangeId);
 				return true;

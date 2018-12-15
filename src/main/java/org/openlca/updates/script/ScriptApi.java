@@ -53,11 +53,8 @@ import org.openlca.core.model.descriptors.SocialIndicatorDescriptor;
 import org.openlca.core.model.descriptors.SourceDescriptor;
 import org.openlca.core.model.descriptors.UnitGroupDescriptor;
 import org.openlca.core.results.ContributionResult;
-import org.openlca.core.results.ContributionResultProvider;
 import org.openlca.core.results.SimpleResult;
-import org.openlca.core.results.SimpleResultProvider;
 import org.openlca.core.results.SimulationResult;
-import org.openlca.core.results.SimulationResultProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -545,43 +542,40 @@ public class ScriptApi {
 		dao.delete(model);
 	}
 
-	public SimpleResultProvider<SimpleResult> calculate(ProductSystem system) {
+	public SimpleResult calculate(ProductSystem system) {
 		return calculate(system, null);
 	}
 
-	public SimpleResultProvider<SimpleResult> calculate(ProductSystem system,
+	public SimpleResult calculate(ProductSystem system,
 			ImpactMethod method) {
 		CalculationSetup setup = new CalculationSetup(CalculationType.SIMPLE_CALCULATION, system);
 		if (method != null)
 			setup.impactMethod = Descriptors.toDescriptor(method);
 		setup.parameterRedefs.addAll(system.parameterRedefs);
 		SystemCalculator calculator = new SystemCalculator(context.matrixCache, context.solver);
-		SimpleResult result = calculator.calculateSimple(setup);
-		return new SimpleResultProvider<>(result, context.entityCache);
+		return calculator.calculateSimple(setup);
 	}
 
-	public ContributionResultProvider<ContributionResult> analyze(
-			ProductSystem system) {
+	public ContributionResult analyze(ProductSystem system) {
 		return analyze(system, null);
 	}
 
-	public ContributionResultProvider<ContributionResult> analyze(
+	public ContributionResult analyze(
 			ProductSystem system, ImpactMethod method) {
 		CalculationSetup setup = new CalculationSetup(CalculationType.UPSTREAM_ANALYSIS, system);
 		if (method != null)
 			setup.impactMethod = Descriptors.toDescriptor(method);
 		setup.parameterRedefs.addAll(system.parameterRedefs);
 		SystemCalculator calculator = new SystemCalculator(context.matrixCache, context.solver);
-		ContributionResult result = calculator.calculateContributions(setup);
-		return new ContributionResultProvider<>(result, context.entityCache);
+		return calculator.calculateContributions(setup);
 	}
 
-	public SimulationResultProvider<SimulationResult> simulate(
+	public SimulationResult simulate(
 			ProductSystem system, int iterations) {
 		return simulate(system, null, iterations);
 	}
 
-	public SimulationResultProvider<SimulationResult> simulate(
+	public SimulationResult simulate(
 			ProductSystem system, ImpactMethod method, int iterations) {
 		CalculationSetup setup = new CalculationSetup(CalculationType.MONTE_CARLO_SIMULATION, system);
 		if (method != null)
@@ -590,8 +584,7 @@ public class ScriptApi {
 		Simulator simulator = new Simulator(setup, context.matrixCache, context.solver);
 		for (int i = 0; i < iterations; i++)
 			simulator.nextRun();
-		SimulationResult result = simulator.getResult();
-		return new SimulationResultProvider<>(result, context.entityCache);
+		return simulator.getResult();
 	}
 
 	public List<? extends RootEntity> query(String jpql, ModelType type) {
