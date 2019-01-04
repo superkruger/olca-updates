@@ -1,9 +1,7 @@
 package org.openlca.updates.legacy;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,40 +75,6 @@ class Upgrade4Files {
 			File target = new File(dir, "layout.json");
 			if (!target.exists())
 				Files.copy(file.toPath(), target.toPath());
-		}
-	}
-
-	public static void main(String[] args) {
-		List<String> list = new ArrayList<>();
-		list.add("http://www.openlca.org/openlca/");
-		list.add("http://www.openlca.org/openlca/new1-5/");
-		list.add("http://www.openlca.org/openlca/openlca-features/");
-		list.add("http://www.openlca.org/format-converter/");
-		list.add("http://www.openlca.org/collaboration-server/");
-		list.add("http://www.openlca.org/lca-data/");
-		list.add("http://www.openlca.org/blog/");
-		list.add("http://www.openlca.org/use-cases/");
-		list.add("http://www.openlca.org/learning/");
-		list.add("http://www.openlca.org/trainings/");
-		list.add("http://www.openlca.org/service-contracts/");
-		list.add("http://www.openlca.org/moreservices/");
-		list.add("http://www.openlca.org/partners/");
-		list.add("http://www.openlca.org/supporters/");
-		list.add("http://www.openlca.org/contributors/");
-		list.add("http://www.openlca.org/participate-2/");
-		list.add("http://www.openlca.org/the-idea/");
-		list.add("http://www.openlca.org/open-source/");
-		list.add("http://www.openlca.org/greendelta/");
-		list.add("http://www.openlca.org/contact/");
-		list.add("http://www.openlca.org/download/");
-		BigDecimal p = new BigDecimal(0.99d);
-		DecimalFormat formatter = new DecimalFormat("#.##");
-		for (String l : list) {
-			System.out.println("\t<url>");
-			System.out.println("\t\t<loc>" + l + "</loc>");
-			System.out.println("\t\t<priority>" + formatter.format(p.doubleValue()) + "</priority>");
-			System.out.println("\t</url>");
-			p = p.subtract(new BigDecimal(0.01d));
 		}
 	}
 
