@@ -118,7 +118,7 @@ public class ScriptApi {
 	public void eachLocation(Consumer<Location> consumer) {
 		LocationDao dao = new LocationDao(database);
 		for (LocationDescriptor d : dao.getDescriptors()) {
-			Location val = dao.getForId(d.getId());
+			Location val = dao.getForId(d.id);
 			consumer.accept(val);
 		}
 	}
@@ -159,7 +159,7 @@ public class ScriptApi {
 	public void eachActor(Consumer<Actor> consumer) {
 		ActorDao dao = new ActorDao(database);
 		for (ActorDescriptor descriptor : dao.getDescriptors()) {
-			Actor val = dao.getForId(descriptor.getId());
+			Actor val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -200,7 +200,7 @@ public class ScriptApi {
 	public void eachSource(Consumer<Source> consumer) {
 		SourceDao dao = new SourceDao(database);
 		for (SourceDescriptor descriptor : dao.getDescriptors()) {
-			Source val = dao.getForId(descriptor.getId());
+			Source val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -224,7 +224,7 @@ public class ScriptApi {
 	public void eachUnitGroup(Consumer<UnitGroup> consumer) {
 		UnitGroupDao dao = new UnitGroupDao(database);
 		for (UnitGroupDescriptor descriptor : dao.getDescriptors()) {
-			UnitGroup val = dao.getForId(descriptor.getId());
+			UnitGroup val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -248,7 +248,7 @@ public class ScriptApi {
 	public void eachFlowProperty(Consumer<FlowProperty> consumer) {
 		FlowPropertyDao dao = new FlowPropertyDao(database);
 		for (FlowPropertyDescriptor descriptor : dao.getDescriptors()) {
-			FlowProperty val = dao.getForId(descriptor.getId());
+			FlowProperty val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -272,7 +272,7 @@ public class ScriptApi {
 	public void eachFlow(Consumer<Flow> consumer) {
 		FlowDao dao = new FlowDao(database);
 		for (FlowDescriptor descriptor : dao.getDescriptors()) {
-			Flow val = dao.getForId(descriptor.getId());
+			Flow val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -296,7 +296,7 @@ public class ScriptApi {
 	public void eachProcess(Consumer<Process> consumer) {
 		ProcessDao dao = new ProcessDao(database);
 		for (ProcessDescriptor descriptor : dao.getDescriptors()) {
-			Process process = dao.getForId(descriptor.getId());
+			Process process = dao.getForId(descriptor.id);
 			consumer.accept(process);
 		}
 	}
@@ -320,7 +320,7 @@ public class ScriptApi {
 	public void eachMethod(Consumer<ImpactMethod> consumer) {
 		ImpactMethodDao dao = new ImpactMethodDao(database);
 		for (ImpactMethodDescriptor descriptor : dao.getDescriptors()) {
-			ImpactMethod val = dao.getForId(descriptor.getId());
+			ImpactMethod val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -344,7 +344,7 @@ public class ScriptApi {
 	public void eachSystem(Consumer<ProductSystem> consumer) {
 		ProductSystemDao dao = new ProductSystemDao(database);
 		for (ProductSystemDescriptor descriptor : dao.getDescriptors()) {
-			ProductSystem val = dao.getForId(descriptor.getId());
+			ProductSystem val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -368,7 +368,7 @@ public class ScriptApi {
 	public void eachProject(Consumer<Project> consumer) {
 		ProjectDao dao = new ProjectDao(database);
 		for (ProjectDescriptor descriptor : dao.getDescriptors()) {
-			Project val = dao.getForId(descriptor.getId());
+			Project val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
@@ -522,7 +522,7 @@ public class ScriptApi {
 	public void eachSocialIndicator(Consumer<SocialIndicator> consumer) {
 		SocialIndicatorDao dao = new SocialIndicatorDao(database);
 		for (SocialIndicatorDescriptor descriptor : dao.getDescriptors()) {
-			SocialIndicator val = dao.getForId(descriptor.getId());
+			SocialIndicator val = dao.getForId(descriptor.id);
 			consumer.accept(val);
 		}
 	}
