@@ -1,0 +1,12 @@
+{
+	"refId": "5912d392-e353-4158-a730-e3df6e7cfb5b",
+	"name": "Update to database schema v8",
+	"description": "This update changes the database structure to fit the openLCA 1.8.0 schema",
+	"dbVersion": 7,
+	"schemaUpdate": true,
+	"releaseDate": "2019-02-04",
+	"dependencies": [
+		"61294145-05db-45e4-9cb8-84bfb76baf2f"
+	],
+	"required": true
+}
