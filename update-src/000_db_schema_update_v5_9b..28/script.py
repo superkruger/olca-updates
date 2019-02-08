@@ -1,6 +1,6 @@
 import gnu.trove.map.hash.TObjectLongHashMap as TObjectLongHashMap
 import gnu.trove.impl.Constants as Constants
-import org.openlca.core.matrix.cache.FlowTypeTable as FlowTypeTable
+import org.openlca.core.matrix.cache.FlowTable as FlowTable
 import org.openlca.core.matrix.LongPair as LongPair
 
 dbUtil.renameColumn("tbl_sources", "doi", "url", "VARCHAR(255)")
@@ -16,7 +16,7 @@ def callback(rs):
     processId = rs.getLong(2)
     flowId = rs.getLong(3)
     isInput = rs.getBoolean(4)
-    if not isInput or flowTypes.get(flowId) == FlowType.ELEMENTARY_FLOW:
+    if not isInput or flowTypes.type(flowId) == FlowType.ELEMENTARY_FLOW:
         return
     idx.put(LongPair.of(processId, flowId), exchangeId)
     return
@@ -28,7 +28,7 @@ def updateLinks(rs):
     global idx
     idx = TObjectLongHashMap(Constants.DEFAULT_CAPACITY, Constants.DEFAULT_LOAD_FACTOR, -1)
     global flowTypes
-    flowTypes = FlowTypeTable.create(db)
+    flowTypes = FlowTable.create(db)
     sql = "SELECT id, f_owner, f_flow, is_input from tbl_exchanges"
     olca.querySql(sql, callback)
     con = db.createConnection()
