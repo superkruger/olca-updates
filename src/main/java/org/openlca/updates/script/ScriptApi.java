@@ -581,7 +581,7 @@ public class ScriptApi {
 		if (method != null)
 			setup.impactMethod = Descriptors.toDescriptor(method);
 		setup.parameterRedefs.addAll(system.parameterRedefs);
-		Simulator simulator = new Simulator(setup, context.matrixCache, context.solver);
+		Simulator simulator = Simulator.create(setup, context.matrixCache, context.solver);
 		for (int i = 0; i < iterations; i++)
 			simulator.nextRun();
 		return simulator.getResult();
