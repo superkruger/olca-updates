@@ -8,14 +8,14 @@ import java.sql.SQLException;
 import org.openlca.core.database.IDatabase;
 import org.openlca.core.database.NativeSql;
 import org.openlca.core.database.derby.DerbyDatabase;
-import org.openlca.core.database.mysql.MySQLDatabase;
+import org.openlca.core.database.postgres.PostgresDatabase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DbUtil {
 
 	private final int TYPE_DERBY = 0;
-	private final int TYPE_MYSQL = 1;
+	private final int TYPE_POSTGRES = 1;
 
 	private final int dbType;
 	private IDatabase database;
@@ -24,8 +24,8 @@ public class DbUtil {
 
 	public DbUtil(IDatabase database) {
 		this.database = database;
-		if (database instanceof MySQLDatabase)
-			dbType = TYPE_MYSQL;
+		if (database instanceof PostgresDatabase)
+			dbType = TYPE_POSTGRES;
 		else
 			dbType = TYPE_DERBY;
 	}
@@ -35,7 +35,7 @@ public class DbUtil {
 		switch (dbType) {
 		case TYPE_DERBY:
 			return "CLOB(64 K)";
-		case TYPE_MYSQL:
+		case TYPE_POSTGRES:
 			return "TEXT";
 		default:
 			return "CLOB(64 K)";
@@ -46,8 +46,8 @@ public class DbUtil {
 		switch (dbType) {
 		case TYPE_DERBY:
 			return "BLOB(16 M)";
-		case TYPE_MYSQL:
-			return "MEDIUMBLOB";
+		case TYPE_POSTGRES:
+			return "BYTEA";
 		default:
 			return "BLOB(16 M)";
 		}
